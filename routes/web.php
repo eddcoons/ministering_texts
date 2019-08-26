@@ -22,3 +22,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::post('survey-results', 'SurveyResultsController@post');
+Route::get('survey-results', 'SurveyResultsController@show');

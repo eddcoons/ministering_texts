@@ -36,6 +36,9 @@
 <style>
     .login-wrapper {
         display: grid;
+        grid-template-rows: 100px auto;
+        height: 50vh;
+        margin-top: 3rem;
     }
 
     .section-heading {

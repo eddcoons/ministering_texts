@@ -510,6 +510,7 @@ We love you Sisters and know that you will be of great help to {{msOneFirstName}
                 this.currentSisterData = this.sistersData.find((sister) => {
                     return sister['Last Name'] === lastName && sister['First Name'] === firstName
                 });
+                console.log(this.currentSisterData);
                 this.msTwoMinisteringType = this.currentSisterData['Type of Ministering'];
                 this.msTwoAvailability = this.currentSisterData['Availability'];
                 this.msTwoTreat = this.currentSisterData['Treat'];
@@ -704,7 +705,6 @@ We love you Sisters and know that you will be of great help to {{msOneFirstName}
     }
 
     .copy-button:hover, .start-again-button:hover {
-        cursor: pointer;
         transform: scale(1.1);
         transition: all .3s ease-in-out;
     }

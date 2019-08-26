@@ -24,6 +24,8 @@ Vue.component('home', require('./components/Home.vue').default);
 Vue.component('two-companions-two-sisters', require('./components/TwoCompanionsTwoSisters.vue').default);
 Vue.component('two-companions-three-sisters', require('./components/TwoCompanionsThreeSisters.vue').default);
 
+import VueCsvImport from 'vue-csv-import';
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

@@ -377,12 +377,13 @@
                 </div>
             </div>
             <div class="upload-wrapper">
-                <button class="upload-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 61.89 38.42" class="arrow-svg upload-arrow">
-                        <path class="cls-purple" d="M61.36,14.2A180.23,180.23,0,0,0,36.34.12a1.09,1.09,0,0,0-1.61.93,88.68,88.68,0,0,0,.4,12.09c-10.68-.21-21.67-.52-32.31.31a.94.94,0,0,0-1.75.19A44.49,44.49,0,0,0,.13,27.06,1.08,1.08,0,0,0,1.2,28.13L24.29,26c2.58-.25,8.93-2,10.8.06.71.78.56,3.86.7,4.85l1,6.8c.12.83,1.27,1,1.79.47l23-22.25A1.08,1.08,0,0,0,61.36,14.2ZM36.87,23.5a1.06,1.06,0,0,0-1-.79L2.21,25.89a60.72,60.72,0,0,1,.62-10.68c10.93.76,22.21.3,33.15,0A1,1,0,0,0,37,14a1,1,0,0,0,0-.17c-.19-3.72-.23-7.43-.15-11.14A179.25,179.25,0,0,1,59.11,15.28L38.57,35.16Q37.72,29.33,36.87,23.5Z"/>
-                    </svg>
-                    Upload New CSV
-                </button>
+                <button class="upload-button" v-bind:class="{'upload-hidden' : !uploadNew}" @click="uploadNew = !uploadNew">Upload New CSV</button>
+                        <form @submit.prevent="uploadSurveyResults()" v-bind:class="{'upload-hidden' : uploadNew}">
+                        <input type="file" @change="storeSurveyResults" ref="files">
+                        <button id="upload-file" class="upload-button upload-file" v-bind:class="{'upload-hidden' : !fileUploaded}" type="submit">
+                            Upload File
+                        </button>
+                        </form>
             </div>
         </div>
         <two-companions-two-sisters v-if="optionTwoSelected" v-on:start-again="startAgain()" :sisters-data="data"></two-companions-two-sisters>
@@ -394,18 +395,21 @@
 <script>
     import TwoCompanionsTwoSisters from "./TwoCompanionsTwoSisters";
     import TwoCompanionsThreeSisters from "./TwoCompanionsThreeSisters";
-    let data = import('../../assets/sisters_data.json');
+    import VueCsvImport from 'vue-csv-import';
+
+    // let data = import('../../assets/sisters_data.json');
+
     export default {
         components: {
             TwoCompanionsTwoSisters,
-            TwoCompanionsThreeSisters
-
+            TwoCompanionsThreeSisters,
+            VueCsvImport
         },
 
         created() {
-            data.then(response => {
-                this.data = response.default;
-            })
+            axios.get('survey-results').then(response => {
+                this.data = response.data;
+            });
         },
 
         data() {
@@ -413,11 +417,30 @@
                 optionSelected : false,
                 optionTwoSelected: false,
                 optionThreeSelected: false,
-                data: []
+                data: [],
+                surveyResultsFile: null,
+                uploadNew: true,
+                fileUploaded: false
             }
 
         },
         methods : {
+
+            storeSurveyResults(e) {
+                this.surveyResultsFile = e.target.files[0];
+                this.fileUploaded = true;
+            },
+
+            uploadSurveyResults() {
+                let formData = new FormData();
+
+                formData.append('survey-results', this.surveyResultsFile);
+
+                axios.post('/survey-results', formData).then(response => {
+                    document.getElementById('upload-file').textContent= "Uploaded!";
+
+                });
+            },
 
             toggleOptionSelected(sectionToShow) {
                 this.optionSelected = !this.optionSelected;
@@ -561,9 +584,16 @@
         transition: all .3s ease-in-out;
     }
 
-    .upload-arrow {
-        transform: rotate(-90deg);
-        padding: .1rem;
+    .upload-hidden {
+        display: none;
+    }
+
+    .upload-file {
+        background: #343085;
+        width: 100%;
+        color: #fff;
+        margin: .5rem 0;
+        font-weight: 700;
     }
 
     @media (max-width: 900px) {
