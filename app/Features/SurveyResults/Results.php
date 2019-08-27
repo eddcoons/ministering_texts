@@ -11,9 +11,9 @@ class Results
      */
     private $linkPath;
 
-    public function __construct(string $linkPath)
+    public function __construct(string $linkPath = null)
     {
-        if (!file_exists($linkPath)) {
+        if (!\Storage::exists($linkPath)) {
             throw new FileNotFoundException('File at path: ' . $linkPath . ' does not exist');
         }
 
@@ -43,8 +43,7 @@ class Results
      */
     private function getRows(): array
     {
-        $rows = array_map("str_getcsv", explode("\n", \Storage::get($this->linkPath)));
-        return $rows;
+        return array_map("str_getcsv", explode("\n", \Storage::get($this->linkPath)));
     }
 
     /**

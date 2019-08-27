@@ -14,7 +14,7 @@ class SurveyResultsController extends Controller
     {
         $link = SurveyResultsLink::latest()->first();
 
-        $formattedResults= (new Results($link->path))->format();
+        $formattedResults= (new Results(optional($link)->path))->format();
 
         return response()->json($formattedResults);
     }
