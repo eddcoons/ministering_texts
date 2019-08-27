@@ -438,7 +438,6 @@
 
                 axios.post('/survey-results', formData).then(response => {
                     document.getElementById('upload-file').textContent= "Uploaded!";
-
                 });
             },
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Features\SurveyResults\Results;
 use App\SurveyResultsLink;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -13,22 +14,9 @@ class SurveyResultsController extends Controller
     {
         $link = SurveyResultsLink::latest()->first();
 
-        $rows = array_map("str_getcsv", explode("\n", \Storage::get($link->path)));
+        $formattedResults= (new Results($link->path))->format();
 
-        $headers = $rows[0];
-
-        $rowsWithHeaders = collect($rows)
-            ->slice(1)
-            ->map(function ($row) use ($headers) {
-                if (count($row) == count($headers)) {
-                    return array_combine($headers, $row);
-                }
-                return null;
-            })
-            ->filter()
-            ->values();
-
-        return response()->json($rowsWithHeaders);
+        return response()->json($formattedResults);
     }
 
     public function post(Request $request)

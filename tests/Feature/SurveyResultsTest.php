@@ -7,11 +7,23 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\File;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use League\Flysystem\FileNotFoundException;
 use Tests\TestCase;
 
 class SurveyResultsTest extends TestCase
 {
     use DatabaseTransactions;
+
+    /**
+     * @test
+     */
+    public function it_throws_exception_if_file_doesn_not_exists()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->expectException(FileNotFoundException::class);
+        $this->get('/survey-results');
+    }
 
     /**
      * @test
